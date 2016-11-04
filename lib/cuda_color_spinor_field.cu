@@ -170,8 +170,22 @@ namespace quda {
     }
 
     if (create != QUDA_REFERENCE_FIELD_CREATE) {
-      v = device_malloc(bytes);
-      if (precision == QUDA_HALF_PRECISION) norm = device_malloc(norm_bytes);
+      switch(mem_type) {
+      case QUDA_MEMORY_DEVICE:
+	v = device_malloc(bytes);
+	if (precision == QUDA_HALF_PRECISION) norm = device_malloc(norm_bytes);
+	break;
+      case QUDA_MEMORY_MAPPED:
+	v_h = mapped_malloc(bytes);
+	cudaHostGetDevicePointer(&v, v_h, 0); // set the matching device pointer
+	if (precision == QUDA_HALF_PRECISION) {
+	  norm_h = mapped_malloc(norm_bytes);
+	  cudaHostGetDevicePointer(&norm, norm_h, 0); // set the matching device pointer
+	}
+	break;
+      default:
+	errorQuda("Unsupported memory type %d", mem_type);
+      }
       alloc = true;
     }
 
@@ -189,6 +203,7 @@ namespace quda {
         param.is_composite   = false;
         param.composite_dim  = 0;
         param.is_component = true;
+	param.mem_type = mem_type;
 
         components.reserve(composite_descr.dim);
         for(int cid = 0; cid < composite_descr.dim; cid++) {
@@ -209,6 +224,7 @@ namespace quda {
         param.composite_dim = 0;
         param.is_component  = composite_descr.is_component;
         param.component_id  = composite_descr.id;
+	param.mem_type = mem_type;
         even = new cudaColorSpinorField(*this, param);
         odd = new cudaColorSpinorField(*this, param);
 
@@ -283,6 +299,7 @@ namespace quda {
   void cudaColorSpinorField::createTexObject() {
 
     if (isNative()) {
+
       if (texInit) errorQuda("Already bound textures");
       
       // create the texture for the field components
@@ -436,9 +453,18 @@ namespace quda {
     if (ghost_field) device_pinned_free(ghost_field);
 
     if (alloc) {
-      device_free(v);
-      if (precision == QUDA_HALF_PRECISION) device_free(norm);
-      alloc = false;
+      switch(mem_type) {
+      case QUDA_MEMORY_DEVICE:
+	device_free(v);
+	if (precision == QUDA_HALF_PRECISION) device_free(norm);
+	break;
+      case QUDA_MEMORY_MAPPED:
+	host_free(v_h);
+	if (precision == QUDA_HALF_PRECISION) host_free(norm_h);
+	break;
+      default:
+	errorQuda("Unsupported memory type %d", mem_type);
+      }
     }
 
     if (composite_descr.is_composite) 

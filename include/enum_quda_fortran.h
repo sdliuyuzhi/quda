@@ -17,6 +17,11 @@
 
 #define QudaLinkType integer(4)
 
+#define QUDA_MEMORY_DEVICE 0
+#define QUDA_MEMORY_PINNED 1
+#define QUDA_MEMORY_MAPPED 2
+#define QUDA_MEMORY_INVALID QUDA_INVALID_ENUM
+
 #define QUDA_SU3_LINKS     0
 #define QUDA_GENERAL_LINKS 1
 #define QUDA_THREE_LINKS   2

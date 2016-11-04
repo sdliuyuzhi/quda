@@ -262,6 +262,9 @@ namespace quda {
     void *norm; // the normalization field
     void *ghost_field; // unique ghost zone for this instance
 
+    void *v_h; // the field elements
+    void *norm_h; // the normalization field
+
     // multi-GPU parameters
 
     int nFaceComms; // number of faces allocated

@@ -49,13 +49,15 @@ namespace quda {
     QudaPrecision precision;
     QudaSiteSubset siteSubset;
   
+    QudaMemoryType mem_type;
+
     LatticeFieldParam() 
-    : nDim(0), pad(0), precision(QUDA_INVALID_PRECISION), siteSubset(QUDA_INVALID_SITE_SUBSET) {
+    : nDim(0), pad(0), precision(QUDA_INVALID_PRECISION), siteSubset(QUDA_INVALID_SITE_SUBSET), mem_type(QUDA_MEMORY_DEVICE) {
       for (int i=0; i<nDim; i++) x[i] = 0; 
     }
 
     LatticeFieldParam(int nDim, const int *x, int pad, QudaPrecision precision)
-    : nDim(nDim), pad(pad), precision(precision), siteSubset(QUDA_FULL_SITE_SUBSET) { 
+    : nDim(nDim), pad(pad), precision(precision), siteSubset(QUDA_FULL_SITE_SUBSET), mem_type(QUDA_MEMORY_DEVICE) {
       if (nDim > QUDA_MAX_DIM) errorQuda("Number of dimensions too great");
       for (int i=0; i<nDim; i++) this->x[i] = x[i]; 
     }
@@ -66,7 +68,7 @@ namespace quda {
        LatticeField
     */
     LatticeFieldParam(const QudaGaugeParam &param) 
-    : nDim(4), pad(0), precision(param.cpu_prec), siteSubset(QUDA_FULL_SITE_SUBSET) {
+    : nDim(4), pad(0), precision(param.cpu_prec), siteSubset(QUDA_FULL_SITE_SUBSET), mem_type(QUDA_MEMORY_DEVICE) {
       for (int i=0; i<nDim; i++) this->x[i] = param.X[i];
     }
   };
@@ -191,6 +193,11 @@ namespace quda {
        @param ptr Pointer to be (virtually) freed
      */
     void freePinned(void *ptr) const;
+
+    /**
+       The type of allocation we are going to do for this field
+     */
+    QudaMemoryType mem_type;
 
   public:
 

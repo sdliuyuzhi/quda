@@ -167,7 +167,7 @@ namespace quda {
 
     real_length = volume*nColor*nSpin*2; // physical length
 
-    bytes = length * precision; // includes pads and ghost zones
+    bytes = (size_t)length * precision; // includes pads and ghost zones
     bytes = (siteSubset == QUDA_FULL_SITE_SUBSET && fieldOrder != QUDA_QDPJIT_FIELD_ORDER) ? 2*ALIGNMENT_ADJUST(bytes/2) : ALIGNMENT_ADJUST(bytes);
     bytes = (siteSubset == QUDA_FULL_SITE_SUBSET) ? 2*ALIGNMENT_ADJUST(bytes/2) : ALIGNMENT_ADJUST(bytes);
 

@@ -27,7 +27,7 @@ namespace quda {
 
   LatticeField::LatticeField(const LatticeFieldParam &param)
     : volume(1), pad(param.pad), total_bytes(0), nDim(param.nDim), precision(param.precision),
-      siteSubset(param.siteSubset)
+      siteSubset(param.siteSubset), mem_type(param.mem_type)
   {
     for (int i=0; i<nDim; i++) {
       x[i] = param.x[i];

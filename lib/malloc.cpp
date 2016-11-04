@@ -134,7 +134,7 @@ namespace quda {
 
     a.size = size;
 
-#if (CUDA_VERSION > 4000)
+#if 0 //(CUDA_VERSION > 4000)
     a.base_size = size;
     ptr = malloc(size);
 #else
