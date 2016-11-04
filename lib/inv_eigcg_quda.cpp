@@ -70,8 +70,9 @@ namespace quda {
         eigv_param.is_composite  = true;
         eigv_param.composite_dim = tot_dim;
   
+	eigv_param.mem_type = QUDA_MEMORY_MAPPED;
         cudaRitzVectors = new cudaColorSpinorFieldSet(eigv_param);
-
+	eigv_param.mem_type = QUDA_MEMORY_DEVICE; // restore in case this is reused
 
         return;
      }
@@ -530,7 +531,9 @@ namespace quda {
        csParam.is_composite = true;
        csParam.composite_dim = param.m;
 
+       csParam.mem_type = QUDA_MEMORY_MAPPED;
        Vm = new cudaColorSpinorFieldSet(csParam); //search space for Ritz vectors
+       csParam.mem_type = QUDA_MEMORY_DEVICE; // restore incase this is reused
 
        checkCudaError();
        printfQuda("\n..done.\n");
