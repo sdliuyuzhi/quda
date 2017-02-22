@@ -80,7 +80,6 @@ namespace quda {
 	       typeid(*this)==typeid(cpuColorSpinorField) ||
 	       typeid(*this)==typeid(cpuGaugeField)) {
       location = QUDA_CPU_FIELD_LOCATION;
-      location = QUDA_CPU_FIELD_LOCATION;
     } else {
       errorQuda("Unknown field %s, so cannot determine location", typeid(*this).name());
     }
