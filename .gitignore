@@ -13,3 +13,5 @@ profile.tsv
 config.log
 CMakeCache.txt
 CMakeFiles
+*.swp
+notes/*
